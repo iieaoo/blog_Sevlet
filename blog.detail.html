@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>博客详情页</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/blog.detail.css">
+    <link rel="stylesheet" href="editor.md/css/editormd.min.css" />
+</head>
+<body>
+<!-- 导航栏 -->
+<div class="nav">
+    <img src="image/logo2.jpg" alt="">
+    <span class="title">  我的博客系统 </span>
+    <!-- 这个标签用于占位 -->
+    <div class="spacer"></div>
+    <a href="#">主页</a>
+    <a href="#">写博客</a>
+    <a href="#">注销</a>
+</div>
+<!-- 页面主题部分 -->
+<div class="container">
+    <!-- 左侧信息 -->
+    <div class="container-left">
+        <!-- 表示用户信息 -->
+        <div class="card">
+            <!-- 用户头像 -->
+            <img src="image/maiomiao.jpg" alt="">
+            <!-- 用户名 -->
+            <h3>iieao</h3>
+            <a href="#"> github 地址</a>
+            <div class="counter">
+                <span>文章</span>
+                <span>分类</span>
+            </div>
+            <div class="counter">
+                <span>2</span>
+                <span>1</span>
+            </div>
+        </div>
+    </div>
+    <!-- 右侧信息 -->
+    <div class="container-right">
+        <!-- 博客标题 -->
+        <h3 class="title"></h3>
+        <!-- 博客发布时间 -->
+        <div class="date"></div>
+        <!-- 博客正文，为了配合 editormd 进行格式转换，此处务必改成 id -->
+        <div id="content">
+
+        </div>
+    </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<!-- 要保证这几个 js 的加载在 jquery 之后。 editor.md 依赖了 jquery -->
+<script src="editor.md/lib/marked.min.js"></script>
+<script src="editor.md/lib/prettify.min.js"></script>
+<script src="editor.md/editormd.js"></script>
+<script>
+    $.ajax({
+        type: 'get',
+        url: 'blog' + location.search,
+        success: function(body) {
+            //处理响应结果， 此处的 body 就是表示一个博客的 js 对象
+            // 1、更新标题
+            let titleDiv = document.querySelector('.container-right .title');
+            titleDiv.innerHTML = body.title;
+            // 2、更新日期
+            let dateDiv = document.querySelector('.date');
+            dateDiv.innerHTML = body.postTime;
+            // 3、更新博客正文
+            // 此处不应该直接把博客正文填充到这个标签里
+            editormd.markdownToHTML('content', { markdown: body.content });
+        }
+    })
+</script>
+</body>
+</html>
